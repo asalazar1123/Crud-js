@@ -23,7 +23,7 @@ function mostrarAlerta(message, className){
 // BORRANDO CAMPOS
 
 function borrarCampos(){
-    document.querySelector("nombre").value = "";
+    document.querySelector("#registrados").value = "";
 }
 
 
@@ -36,14 +36,13 @@ document.querySelector("#registro").addEventListener("submit", (e)=>{
     const nombreEmpresa = document.querySelector("#empresa").value;
 
     //validamos
-    debugger
     if( empresa.value == ""){
          mostrarAlerta("Porfavor ingresa el nombre de tu empresa para continuar" , "danger");
     }
     else{
         if(rowSeleccionada == null){
-            const lista = document.querySelector("#registro");
-            const row = document.createComment("tr");
+            const lista = document.querySelector("#registrados");
+            const row = document.createElement("tr");
 
             row.innerHTML = `
             <td>${nombreEmpresa}</td>
@@ -53,19 +52,42 @@ document.querySelector("#registro").addEventListener("submit", (e)=>{
 
             lista.appendChild(row);
             rowSeleccionada = null;
-            mostrarAlerta("Empresa agregada", "succes");
+            mostrarAlerta("Empresa agregada", "success");
         }
+        else{
+            rowSeleccionada.children[0].textContent = empresa;
+            rowSeleccionada = null;
+            mostrarAlerta("Empresa editada", "info");
+        }
+        
+        borrarCampos();
     }
 
 });
 
 
+// EDITAMOS DATOS
+
+document.querySelector("#registrados").addEventListener("click", (e) =>{
+    target = e.target;
+    if(target.classList.contains("editar")){
+        rowSeleccionada = target.parentElement.parentElement;
+        document.querySelector("#empresa").value = rowSeleccionada.children[0].textContent;
+    }
+});
+
+
+
+
+
+
+
 // BORRAMOS DATA
 
-document.querySelector(".registro-empresas").addEventListener("click", (e) => {
+document.querySelector("#registrados").addEventListener("click", (e) => {
    target = e.target;
-   if (target.listaEmpresas.contains(".eliminar")){
+   if (target.classList.contains("borrar")){
     target.parentElement.parentElement.remove();
-    showAlert(" Empresa Eliminada" , "danger");
+    showAlert(" Empresa Eliminada", "danger");
    }
 });
