@@ -4,7 +4,7 @@ let rowSeleccionada = null; //Esta variable se usará más adelante para almacen
 
 
 // mostramos alertas
-//todo: se define funcion que muestra alerta que acepta los parametros mensaje y nombreEmpresa con lo cual crearemos alertas en la interfaz
+//se define funcion que muestra alerta que acepta los parametros mensaje y nombreEmpresa con lo cual crearemos alertas en la interfaz
 function mostrarAlerta(message, className){
     const div = document.createElement("div");
     div.className = `alert alert-${className}`;
@@ -23,7 +23,7 @@ function mostrarAlerta(message, className){
 // BORRANDO CAMPOS
 
 function borrarCampos(){
-    document.querySelector("#registrados").value = "";
+    document.querySelector("#empresa").value = "";
 }
 
 
@@ -31,7 +31,7 @@ function borrarCampos(){
 
 document.querySelector("#registro").addEventListener("submit", (e)=>{
     e.preventDefault();
-
+    
     //obtenemos valor de form
     const nombreEmpresa = document.querySelector("#empresa").value;
 
@@ -44,8 +44,21 @@ document.querySelector("#registro").addEventListener("submit", (e)=>{
             const lista = document.querySelector("#registrados");
             const row = document.createElement("tr");
 
+            const filas = document.getElementsByTagName("tr")
+
+            for (let i = 1; i < filas.length; i++) {
+                if(filas[i]){                    
+                    let celdas = filas[i].getElementsByTagName("td")
+                    console.log(celdas[0].innerText)
+                    if(celdas[0].innerText == nombreEmpresa){
+                        mostrarAlerta(" No se puede agregar, la empresa ya existe", "danger");
+                        return false;
+                    }
+                }                            
+            }
+            
             row.innerHTML = `
-            <td>${nombreEmpresa}</td>
+            <td id="${nombreEmpresa}">${nombreEmpresa}</td>
             <td>
             <a href="#" class="btn btn-warning btn-sm editar">Editar</a> 
             <a href="#" class="btn btn-danger btn-sm borrar">Eliminar</a>`;
@@ -55,7 +68,23 @@ document.querySelector("#registro").addEventListener("submit", (e)=>{
             mostrarAlerta("Empresa agregada", "success");
         }
         else{
-            rowSeleccionada.children[0].textContent = empresa;
+        //debugger
+           // rowSeleccionada.children[0].textContent = empresa;
+           //rowSeleccionada = null;
+           // mostrarAlerta("Empresa editada", "info");
+            const filas = document.getElementsByTagName("tr")
+
+            for (let i = 1; i < filas.length; i++) {
+                if(filas[i]){
+                    let celdas = filas[i].getElementsByTagName("td")
+                    if(celdas[0].innerText == rowSeleccionada.children[0].innerText){
+                        rowSeleccionada.children[0].innerText = nombreEmpresa
+                        rowSeleccionada = null;
+                    }else{
+                        console.log("No se encontro el valor")
+                    } 
+                }                            
+            }
             rowSeleccionada = null;
             mostrarAlerta("Empresa editada", "info");
         }
@@ -67,12 +96,11 @@ document.querySelector("#registro").addEventListener("submit", (e)=>{
 
 
 // EDITAMOS DATOS
-
-document.querySelector("#registrados").addEventListener("click", (e) =>{
+document.querySelector("#registrados").addEventListener("click", (e) => {
     target = e.target;
-    if(target.classList.contains("editar")){
+    if (target.classList.contains("editar")) {
         rowSeleccionada = target.parentElement.parentElement;
-        document.querySelector("#empresa").value = rowSeleccionada.children[0].textContent;
+        document.querySelector("#empresa").value = rowSeleccionada.children[0].textContent; // Corrección aquí
     }
 });
 
@@ -88,6 +116,6 @@ document.querySelector("#registrados").addEventListener("click", (e) => {
    target = e.target;
    if (target.classList.contains("borrar")){
     target.parentElement.parentElement.remove();
-    showAlert(" Empresa Eliminada", "danger");
+    mostrarAlerta(" Empresa Eliminada", "danger");
    }
 });
