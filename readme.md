@@ -23,6 +23,10 @@ Edita y muestra alerta del proceso
 
 ![GitHub](./img/screenshots/img4.jpg)
 
+ELimina y muestra alerta
+
+![GitHub](./img/screenshots/img5.jpg)
+
 ## Links 📎
 
 + Visitar el proyecto : https://asalazar1123.github.io/Crud-js/ 💻
